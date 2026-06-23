@@ -1,0 +1,75 @@
+package com.infotrapichao.api_manicure.src.distributed.interfaces.controllers.common;
+
+import com.infotrapichao.api_manicure.src.application.contracts.common.IClienteApplication;
+import com.infotrapichao.api_manicure.src.distributed.interfaces.dtos.common.ClienteDTO;
+import com.infotrapichao.api_manicure.src.distributed.interfaces.helpers.Utils;
+import com.infotrapichao.api_manicure.src.distributed.interfaces.mappers.ClienteMapper;
+import com.infotrapichao.api_manicure.src.domain.models.common.Cliente;
+import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+
+import java.net.URI;
+import java.util.List;
+
+@RestController
+@RequestMapping("clientes")
+public class ClienteController  {
+
+    private final IClienteApplication _clienteApplication;
+
+    public ClienteController(IClienteApplication clienteApplication){
+        this._clienteApplication = clienteApplication;
+    }
+
+    @PostMapping
+    public ResponseEntity<Cliente> create(@Validated @RequestBody ClienteDTO clienteDTO){
+        try {
+            Cliente cliente = ClienteMapper.toCliente(clienteDTO);
+            if(cliente.getPhotoName() != null && cliente.getImagemBase64() != null) {
+                Utils.savePhoto(cliente.getPhotoName(), cliente.getImagemBase64());
+            }
+            cliente.setImagemBase64(null);
+            var clienteCreated = _clienteApplication.create(cliente);
+            URI location = ServletUriComponentsBuilder
+                    .fromCurrentRequest()
+                    .path("/{id}")
+                    .buildAndExpand(clienteCreated.getId())
+                    .toUri();
+            return ResponseEntity.created(location).body(clienteCreated);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    @PutMapping()
+    public ResponseEntity<Cliente> put(@RequestBody ClienteDTO clienteDTO) {
+        Cliente cliente = ClienteMapper.toCliente(clienteDTO);
+        if(cliente.getPhotoName() != null && cliente.getImagemBase64() != null) {
+            Utils.savePhoto(cliente.getPhotoName(), cliente.getImagemBase64());
+        }
+        cliente.setImagemBase64(null);
+        Cliente clienteAtualizado = _clienteApplication.update(cliente);
+        return ResponseEntity.ok(clienteAtualizado);
+    }
+
+    @GetMapping()
+    public ResponseEntity<List<ClienteDTO>> findAll(){
+        var lista = ClienteMapper.toClienteDTOList(_clienteApplication.findAll());
+        return ResponseEntity.ok(lista);
+    }
+    @GetMapping("/{id}")
+    public ResponseEntity<Cliente> findById(@PathVariable("id") Integer id){
+        var cliente = _clienteApplication.findById(id);
+        return ResponseEntity.ok(cliente);
+    }
+
+    @PostMapping("/filtrar")
+    public ResponseEntity<List<ClienteDTO>> filtrar(@RequestBody ClienteDTO filter) {
+        var clientes = _clienteApplication.findAllByFilter(filter);
+        var lista = ClienteMapper.toClienteDTOList(clientes);
+        return ResponseEntity.ok(lista);
+    }
+}

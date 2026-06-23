@@ -1,0 +1,54 @@
+package com.infotrapichao.api_manicure.src.domain.models.common;
+
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.infotrapichao.api_manicure.src.domain.models.security.User;
+import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import org.springframework.data.annotation.CreatedDate;
+
+import java.time.LocalDateTime;
+
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@Entity
+public class Agendamento {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer id;
+
+    @CreatedDate
+    @Column(name = "created_at", nullable = false, updatable = false, columnDefinition = "DATETIME(6) DEFAULT CURRENT_TIMESTAMP(6)")
+    private LocalDateTime createdAt;
+
+    @Column(name = "updated_at", columnDefinition = "DATETIME(6) DEFAULT CURRENT_TIMESTAMP(6)")
+    private LocalDateTime updatedAt;
+
+    @Column(columnDefinition = "bit(1) default 0")
+    private Boolean finalizado;
+
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    @JsonBackReference(value = "user-agendamentos")
+    private User user;
+
+    @ManyToOne
+    @JoinColumn(name = "cliente_id")
+    @JsonBackReference(value = "cliente-agendamentos")
+    private Cliente cliente;
+
+    @Column(length = 200, nullable = false)
+    private String observacao;
+
+    @Column(columnDefinition = "bit(1) default 0")
+    private Boolean deletado;
+
+    @Column(name = "data_atendimento", columnDefinition = "DATETIME(6) DEFAULT CURRENT_TIMESTAMP(6)")
+    private LocalDateTime dataAtendimento;
+
+  }

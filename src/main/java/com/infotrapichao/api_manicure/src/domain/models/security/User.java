@@ -1,6 +1,8 @@
 package com.infotrapichao.api_manicure.src.domain.models.security;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.infotrapichao.api_manicure.src.domain.models.common.Agendamento;
+import com.infotrapichao.api_manicure.src.domain.models.common.Cliente;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -16,11 +18,11 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 
-@Entity
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@Entity
 public class User {
 
     @Id
@@ -40,12 +42,16 @@ public class User {
     @Column(length = 50, nullable = false)
     private String email;
 
-    @Column(nullable = false)
+    @Column(length = 255, nullable = false)
     private String password;
 
-    /*@OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
-    @JsonManagedReference(value = "user-agendadepagamentos")
-    private List<AgendaDePagamento> agendaDePagamentos;*/
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonManagedReference
+    private List<Cliente> clientes;
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonManagedReference(value = "user-agendamentos")
+    private List<Agendamento> agendamentos;
 
     @ElementCollection(fetch = FetchType.EAGER)
     @CollectionTable(name = "tab_user_roles", joinColumns = @JoinColumn(name = "user"))
@@ -58,6 +64,7 @@ public class User {
                 .map(role -> new SimpleGrantedAuthority("ROLE_" + role)) // Adiciona "ROLE_" no prefixo, que é a convenção do Spring
                 .collect(Collectors.toList());
     }
+
 
     @Override
     public String toString() {
