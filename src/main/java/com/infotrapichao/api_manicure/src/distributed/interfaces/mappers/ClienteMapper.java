@@ -24,7 +24,7 @@ public final class ClienteMapper {
                 cliente.getEmail(),
                 cliente.getTelephone(),
                 UserMapper.toUserDTO(cliente.getUser()),
-                AgendamentoMapper.toAgendamentoDTOList(cliente.getAgendamentos()),
+                List.of(),
                 cliente.isDeletado(),
                 cliente.getPhotoName(),
                 cliente.getImagemBase64()
