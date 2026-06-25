@@ -3,9 +3,9 @@ spring:
     name: api-manicure
 
   datasource:
-    url: jdbc:mysql://square-cloud-db-0b07c3f9849543d9ad112c566890d9b1.squareweb.app:7205/db_manicure_homologacao
-    username: squarecloud
-    password: W6ANEbP9n9TtDlsF9GCxvsPO
+    url: ${DB_URL}
+    username: ${DB_USER}
+    password: ${DB_PASS}
     driver-class-name: com.mysql.cj.jdbc.Driver
     hikari:
       max-lifetime: 300000
@@ -18,10 +18,10 @@ spring:
     database-platform: org.hibernate.dialect.MySQLDialect
 
   mail:
-    host: smtp-relay.brevo.com
-    port: 587
-    username: matheushard2013@gmail.com
-    password: f9tKpFLxP
+    host: ${SMTP_HOST}
+    port: ${SMTP_PORT}
+    username: ${SMTP_USER}
+    password: ${SMTP_PASS}
     protocol: smtp
     properties:
       mail:
@@ -35,13 +35,13 @@ spring:
 
 security:
   config:
-    prefix: Bearer
-    key: SECRET_KEY
+    prefix: ${JWT_PREFIX}
+    key: ${JWT_KEY}
     expiration: 3600000
 
 jwt:
-  secret: DDDFGFDSKKMMMMMMSAKALSMALDAGHGFJDLEEKEMDSSDADNFGBVVCC
-  expiration: 3600000
+  secret: ${JWT_SECRET}
+  expiration: ${JWT_EXPIRATION}
 
 logging:
   level:
@@ -51,5 +51,5 @@ logging:
         web: DEBUG
 
 server:
-  port: 8081
+  port: ${PORT:80}
   address: 0.0.0.0
