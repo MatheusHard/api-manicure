@@ -5,32 +5,62 @@ import com.infotrapichao.api_manicure.src.domain.models.common.Agendamento;
 
 import java.util.List;
 
-public class AgendamentoMapper {
+public final class AgendamentoMapper {
 
-    public static AgendamentoDTO toAgendamentoDTO(Agendamento agendamento) {
-        return new AgendamentoDTO(agendamento.getId(), agendamento.getCreatedAt(), agendamento.getUpdatedAt(),
-                                  agendamento.getFinalizado(), agendamento.getUser(), agendamento.getCliente(),
-                                  agendamento.getObservacao(), agendamento.getDeletado(), null, null,
-                                  agendamento.getDataAtendimento());
+    private AgendamentoMapper() {
     }
 
-    public static Agendamento toAgendamento(AgendamentoDTO agendamentoDTO) {
-        return new Agendamento(agendamentoDTO.getId(), agendamentoDTO.getCreatedAt(), agendamentoDTO.getUpdatedAt(),
-                               agendamentoDTO.getFinalizado(), agendamentoDTO.getUser(), agendamentoDTO.getCliente(),
-                               agendamentoDTO.getObservacao(), agendamentoDTO.getDeletado(), agendamentoDTO.getDataAtendimento());
+    public static AgendamentoDTO toAgendamentoDTO(Agendamento agendamento) {
+        if (agendamento == null) {
+            return null;
+        }
+
+        return new AgendamentoDTO(
+                agendamento.getId(),
+                agendamento.getCreatedAt(),
+                agendamento.getUpdatedAt(),
+                agendamento.getFinalizado(),
+                UserMapper.toUserDTO(agendamento.getUser()),
+                ClienteMapper.toClienteDTO(agendamento.getCliente()),
+                agendamento.getObservacao(),
+                agendamento.getDeletado(),
+                null,
+                null,
+                agendamento.getDataAtendimento()
+        );
+    }
+
+    public static Agendamento toAgendamento(AgendamentoDTO dto) {
+        if (dto == null) {
+            return null;
+        }
+
+        return new Agendamento(
+                dto.getId(),
+                dto.getCreatedAt(),
+                dto.getUpdatedAt(),
+                dto.getFinalizado(),
+                UserMapper.toUser(dto.getUser()),
+                ClienteMapper.toCliente(dto.getCliente()),
+                dto.getObservacao(),
+                dto.getDeletado(),
+                dto.getDataAtendimento()
+        );
     }
 
     public static List<AgendamentoDTO> toAgendamentoDTOList(List<Agendamento> agendamentos) {
-        return agendamentos.stream().map(a -> {
-            AgendamentoDTO dto =  AgendamentoMapper.toAgendamentoDTO(a);
-            //Aqui pode mudar campo do objeto, caso queira
-            dto.getUser().setClientes(null);
-            dto.getUser().setPassword(null);
-            return dto;
-        }).toList();
+        return agendamentos == null
+                ? List.of()
+                : agendamentos.stream()
+                .map(AgendamentoMapper::toAgendamentoDTO)
+                .toList();
     }
 
-    public static List<Agendamento> toAgendamentoList(List<AgendamentoDTO> agendamentosDtos) {
-        return agendamentosDtos.stream().map(AgendamentoMapper::toAgendamento).toList();
+    public static List<Agendamento> toAgendamentoList(List<AgendamentoDTO> dtos) {
+        return dtos == null
+                ? List.of()
+                : dtos.stream()
+                .map(AgendamentoMapper::toAgendamento)
+                .toList();
     }
 }

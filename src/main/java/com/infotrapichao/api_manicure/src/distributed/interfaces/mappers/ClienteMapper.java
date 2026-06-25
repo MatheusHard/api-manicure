@@ -1,29 +1,74 @@
 package com.infotrapichao.api_manicure.src.distributed.interfaces.mappers;
+
 import com.infotrapichao.api_manicure.src.distributed.interfaces.dtos.common.ClienteDTO;
 import com.infotrapichao.api_manicure.src.domain.models.common.Cliente;
 
 import java.util.List;
 
-public class ClienteMapper {
-    public static ClienteDTO toClienteDTO(Cliente cliente) {
-        return new ClienteDTO(cliente.getId(), cliente.getCreatedAt(), cliente.getUpdatedAt(), cliente.getName(), cliente.getCpf(), cliente.getEmail(), cliente.getTelephone(), cliente.getUser(), cliente.getAgendamentos(), cliente.isDeletado(), cliente.getPhotoName(), cliente.getImagemBase64());
+public final class ClienteMapper {
+
+    private ClienteMapper() {
     }
 
-    public static Cliente toCliente(ClienteDTO clienteDTO) {
-        return new Cliente(clienteDTO.getId(), clienteDTO.getCreatedAt(), clienteDTO.getUpdatedAt(), clienteDTO.getName(), clienteDTO.getCpf(), clienteDTO.getEmail(), clienteDTO.getTelephone(), clienteDTO.getUser(), clienteDTO.getAgendamentos(), clienteDTO.isDeletado(), clienteDTO.getPhotoName(), clienteDTO.getImagemBase64());
+    public static ClienteDTO toClienteDTO(Cliente cliente) {
+        if (cliente == null) {
+            return null;
+        }
+
+        return new ClienteDTO(
+                cliente.getId(),
+                cliente.getCreatedAt(),
+                cliente.getUpdatedAt(),
+                cliente.getName(),
+                cliente.getCpf(),
+                cliente.getEmail(),
+                cliente.getTelephone(),
+                UserMapper.toUserDTO(cliente.getUser()),
+                AgendamentoMapper.toAgendamentoDTOList(cliente.getAgendamentos()),
+                cliente.isDeletado(),
+                cliente.getPhotoName(),
+                cliente.getImagemBase64()
+        );
+    }
+
+    public static Cliente toCliente(ClienteDTO dto) {
+        if (dto == null) {
+            return null;
+        }
+
+        return new Cliente(
+                dto.getId(),
+                dto.getCreatedAt(),
+                dto.getUpdatedAt(),
+                dto.getName(),
+                dto.getCpf(),
+                dto.getEmail(),
+                dto.getTelephone(),
+                UserMapper.toUser(dto.getUser()),
+                AgendamentoMapper.toAgendamentoList(dto.getAgendamentos()),
+                dto.isDeletado(),
+                dto.getPhotoName(),
+                dto.getImagemBase64()
+        );
     }
 
     public static List<ClienteDTO> toClienteDTOList(List<Cliente> clientes) {
-        return clientes.stream().map(c -> {
-            ClienteDTO dto =  ClienteMapper.toClienteDTO(c);
-            //Aqui pode mudar campo do objeto, caso queira
-            dto.getUser().setClientes(null);
-            dto.getUser().setPassword(null);
-            return dto;
-        }).toList();
+        if (clientes == null || clientes.isEmpty()) {
+            return List.of();
+        }
+
+        return clientes.stream()
+                .map(ClienteMapper::toClienteDTO)
+                .toList();
     }
 
-    public static List<Cliente> toUserList(List<ClienteDTO> clientesDtos) {
-        return clientesDtos.stream().map(ClienteMapper::toCliente).toList();
+    public static List<Cliente> toClienteList(List<ClienteDTO> dtos) {
+        if (dtos == null || dtos.isEmpty()) {
+            return List.of();
+        }
+
+        return dtos.stream()
+                .map(ClienteMapper::toCliente)
+                .toList();
     }
 }

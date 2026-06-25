@@ -1,5 +1,6 @@
 package com.infotrapichao.api_manicure.src.distributed.interfaces.dtos.common;
 
+import com.infotrapichao.api_manicure.src.distributed.interfaces.dtos.security.UserDTO;
 import com.infotrapichao.api_manicure.src.domain.models.common.Agendamento;
 import com.infotrapichao.api_manicure.src.domain.models.security.User;
 import lombok.AllArgsConstructor;
@@ -23,8 +24,8 @@ public class ClienteDTO {
     private String cpf;
     private String email;
     private String telephone;
-    private User user;
-    private List<Agendamento> agendamentos;
+    private UserDTO user;
+    private List<AgendamentoDTO> agendamentos;
     private boolean deletado = false;
     private String photoName;
     private String imagemBase64;

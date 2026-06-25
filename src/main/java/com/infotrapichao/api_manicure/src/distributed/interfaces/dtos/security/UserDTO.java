@@ -1,5 +1,7 @@
 package com.infotrapichao.api_manicure.src.distributed.interfaces.dtos.security;
 
+import com.infotrapichao.api_manicure.src.distributed.interfaces.dtos.common.AgendamentoDTO;
+import com.infotrapichao.api_manicure.src.distributed.interfaces.dtos.common.ClienteDTO;
 import com.infotrapichao.api_manicure.src.domain.models.common.Agendamento;
 import com.infotrapichao.api_manicure.src.domain.models.common.Cliente;
 import lombok.AllArgsConstructor;
@@ -22,6 +24,6 @@ public class UserDTO {
     private String email;
     private String password;
     private List<String> roles;
-    private List<Cliente> clientes;
-    private List<Agendamento> agendamentos;
+    private List<ClienteDTO> clientes;
+    private List<AgendamentoDTO> agendamentos;
 }

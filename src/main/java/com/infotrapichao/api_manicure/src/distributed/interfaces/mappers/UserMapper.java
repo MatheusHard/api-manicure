@@ -5,24 +5,64 @@ import com.infotrapichao.api_manicure.src.domain.models.security.User;
 
 import java.util.List;
 
-public class UserMapper {
-    public static UserDTO toUserDTO(User user) {
-        return new UserDTO(user.getId(), user.getCreatedAt(), user.getUpdatedAt(), user.getUsername(), user.getEmail(), user.getPassword(), user.getRoles(), null, null);
+public final class UserMapper {
+
+    private UserMapper() {
     }
 
-    public static User toUser(UserDTO userDTO) {
-        return new User(userDTO.getId(), userDTO.getCreatedAt(), userDTO.getUpdatedAt(), userDTO.getUsername(), userDTO.getEmail(), userDTO.getPassword(), null, null, userDTO.getRoles());
+    public static UserDTO toUserDTO(User user) {
+        if (user == null) {
+            return null;
+        }
+
+        return new UserDTO(
+                user.getId(),
+                user.getCreatedAt(),
+                user.getUpdatedAt(),
+                user.getUsername(),
+                user.getEmail(),
+                null, // Nunca retornar a senha
+                user.getRoles(),
+                null,
+                null
+        );
+    }
+
+    public static User toUser(UserDTO dto) {
+        if (dto == null) {
+            return null;
+        }
+
+        return new User(
+                dto.getId(),
+                dto.getCreatedAt(),
+                dto.getUpdatedAt(),
+                dto.getUsername(),
+                dto.getEmail(),
+                dto.getPassword(),
+                null,
+                null,
+                dto.getRoles()
+        );
     }
 
     public static List<UserDTO> toUserDTOList(List<User> users) {
-        return users.stream().map(user -> {
-                                  UserDTO dto =  UserMapper.toUserDTO(user);
-                                  dto.setPassword(null);
-                                  return dto;
-                              }).toList();
-                           }
+        if (users == null || users.isEmpty()) {
+            return List.of();
+        }
 
-    public static List<User> toUserList(List<UserDTO> usersDtos) {
-        return usersDtos.stream().map(UserMapper::toUser).toList();
+        return users.stream()
+                .map(UserMapper::toUserDTO)
+                .toList();
+    }
+
+    public static List<User> toUserList(List<UserDTO> dtos) {
+        if (dtos == null || dtos.isEmpty()) {
+            return List.of();
+        }
+
+        return dtos.stream()
+                .map(UserMapper::toUser)
+                .toList();
     }
 }
