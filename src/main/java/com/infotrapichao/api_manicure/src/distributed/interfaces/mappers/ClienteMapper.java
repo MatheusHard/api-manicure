@@ -25,7 +25,7 @@ public final class ClienteMapper {
                 cliente.getTelephone(),
                 UserMapper.toUserDTO(cliente.getUser()),
                 List.of(),
-                cliente.isDeletado(),
+                cliente.getDeletado(),
                 cliente.getPhotoName(),
                 cliente.getImagemBase64()
         );
@@ -46,7 +46,7 @@ public final class ClienteMapper {
                 dto.getTelephone(),
                 UserMapper.toUser(dto.getUser()),
                 AgendamentoMapper.toAgendamentoList(dto.getAgendamentos()),
-                dto.isDeletado(),
+                dto.getDeletado(),
                 dto.getPhotoName(),
                 dto.getImagemBase64()
         );

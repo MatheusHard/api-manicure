@@ -53,7 +53,7 @@ public class Cliente {
     private List<Agendamento> agendamentos;
 
     @Column(columnDefinition = "bit(1) default 0")
-    private boolean deletado = false;
+    private Boolean deletado = false;
 
     private String photoName;
 

@@ -26,7 +26,7 @@ public class ClienteDTO {
     private String telephone;
     private UserDTO user;
     private List<AgendamentoDTO> agendamentos;
-    private boolean deletado = false;
+    private Boolean deletado = false;
     private String photoName;
     private String imagemBase64;
 
